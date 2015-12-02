@@ -1,0 +1,15 @@
+{
+  "name": "Sassimi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Darryl Blake",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-minify-css": "^1.2.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.1.0",
+    "gulp-server-livereload": "^1.5.4",
+    "gulp-watch": "^4.3.5"
+  }
+}

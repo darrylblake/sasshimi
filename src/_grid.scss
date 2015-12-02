@@ -1,0 +1,53 @@
+@mixin column($columnSpan, $perRow, $gutter:4rem, $gridSize:12, $i:1, $repeating: 'false') {
+  float: left;
+  margin-right: $gutter;
+  
+  @if $gutter > 0{
+    width: calc(#{$columnSpan / $gridSize * 100%} - #{($gutter * ($perRow - 1)) / $perRow});
+  } @else {
+    width: #{$columnSpan / $gridSize * 100%}; 
+  }
+  
+  @if $repeating == 'true' {
+    &:nth-child(#{$perRow}n) { margin-right: 0; }
+    &:nth-child(#{$perRow}n+1) { clear:left }
+  } @else {
+    @if $i % $perRow == 0 {
+      margin-right: 0;
+    }
+  }
+}
+
+// Loops through elements map
+@mixin grid($container, $elements, $gutter: 4rem, $gridSize:12, $perRow: length($elements)) {
+  #{$container} {
+    @extend .group;
+  }
+
+  // Determines if number of elements is fixed or note
+  @if length($elements) < $perRow {
+    $repeating: 'true';
+  } @else {
+    $repeating: 'false';
+  }
+  // Cycles through the elements map
+  @for $i from 1 through length($elements) {
+    $keyValue: nth($elements, $i);
+    $selector: nth($keyValue, 1);
+    $columnSpan: nth($keyValue, 2);
+    #{$container $selector} {
+      @include column($columnSpan, $perRow, $gutter, $gridSize, $i, $repeating);
+    }
+  }
+}
+
+// "Clearfix"
+.group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+// Example usage
+@include grid('.container',('nav':2, 'article':7, 'aside':3), $gutter:1rem, $gridSize:12); 
+
