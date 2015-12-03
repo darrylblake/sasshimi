@@ -51,3 +51,8 @@ html {
 *, *:before, *:after {
   box-sizing: inherit;
 }
+
+// Fixes fonts on Safari
+body {
+  -webkit-font-smoothing: antialiased;
+}
