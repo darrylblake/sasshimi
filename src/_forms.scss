@@ -1,0 +1,48 @@
+fieldset {
+  border: 1px dotted grey;
+}
+
+legend {
+  font-weight: bold;
+}
+
+
+input[type="checkbox"], input[type="radio"] {
+  position: relative;
+  width: 1.4rem;
+  &:before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+}
+input[type="radio"] {
+  &:before {
+    border-radius: 100%;
+    background: grey;
+  }
+  &:checked {
+    &:before {
+      background: green;
+    }
+  }
+}
+input[type="checkbox"] {
+  &:before {
+    background: grey;
+  }
+  &:checked {
+    &:before {
+      background: green;
+    }
+  }
+}
+
+input {
+  font-size: 1rem;
+  padding: 0;
+  margin: 0;
+}
