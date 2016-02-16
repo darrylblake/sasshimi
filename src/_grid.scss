@@ -1,9 +1,8 @@
 @mixin column($columnSpan, $perRow, $gutter:4rem, $gridSize:12, $i:1, $repeating: 'false') {
   float: left;
   margin-right: $gutter;
-  
   @if $gutter > 0{
-    width: calc(#{$columnSpan / $gridSize * 100%} - #{($gutter * ($perRow - 1)) / $perRow});
+    width: calc(#{truncate($columnSpan / $gridSize * 100%)} - #{truncate(($gutter * ($perRow - 1)) / $perRow)});
   } @else {
     width: #{$columnSpan / $gridSize * 100%}; 
   }
@@ -11,7 +10,8 @@
   @if $repeating == 'true' {
     &:nth-child(#{$perRow}n) { margin-right: 0; }
     &:nth-child(#{$perRow}n+1) { clear:left }
-  } @else {
+  } 
+  @else {
     @if $i % $perRow == 0 {
       margin-right: 0;
     }
@@ -19,7 +19,14 @@
 }
 
 // Loops through elements map
-@mixin grid($container, $elements, $gutter: 4rem, $gridSize:12, $perRow: length($elements)) {
+@mixin grid($container, $elements, $gutter: 4rem, $gridSize:12) {
+  // Determines how many items per row if there's only 1 element
+  @if length($elements) == 1 {
+    $perRow: $gridSize / nth(nth($elements, 1),2);
+  } @else {
+    $perRow: length($elements)
+  }
+
   #{$container} {
     @extend .group;
   }
@@ -27,7 +34,8 @@
   // Determines if number of elements is fixed or note
   @if length($elements) < $perRow {
     $repeating: 'true';
-  } @else {
+  }
+  @else {
     $repeating: 'false';
   }
   // Cycles through the elements map
@@ -41,6 +49,21 @@
   }
 }
 
+// To fix rounding issues in different browsers: http://cruft.io/posts/percentage-calculations-in-ie/
+@function truncate($number, $digits: 2, $mode: ceil) {
+    $n: 1;
+    @for $i from 1 through $digits {
+        $n: $n * 10;
+    }
+    @if $mode == round {
+      @return round($number * $n) / $n;
+    } @else if $mode == ceil {
+      @return ceil($number * $n) / $n;
+    } @else if $mode == floor {
+      @return floor($number * $n) / $n;
+    }
+}
+
 // "Clearfix"
 .group:after {
   content: "";
@@ -49,5 +72,11 @@
 }
 
 // Example usage
-@include grid('.container',('nav':2, 'article':7, 'aside':3), $gutter:1rem, $gridSize:12); 
+@media (max-width: 500px) {
+  @include grid('.container',('nav':12, 'article':12, 'aside':12), $gutter:0, $gridSize:12); 
+  @include grid('nav', ('a': 1), $gutter:0.5rem, $gridSize:3)
+}
+@media (min-width: 500px) {
+  @include grid('.container',('nav':2, 'article':7, 'aside':3), $gutter:1rem, $gridSize:12);
+}
 
